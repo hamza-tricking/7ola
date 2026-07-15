@@ -39,7 +39,7 @@ router.post(
 
       res.status(201).json({
         token,
-        user: { id: user._id, name: user.name, email: user.email },
+        user: { id: user._id, name: user.name, email: user.email, role: user.role },
       });
     } catch (err) {
       res.status(500).json({ message: "Server error" });
@@ -77,7 +77,7 @@ router.post(
 
       res.json({
         token,
-        user: { id: user._id, name: user.name, email: user.email },
+        user: { id: user._id, name: user.name, email: user.email, role: user.role },
       });
     } catch (err) {
       res.status(500).json({ message: "Server error" });
@@ -88,8 +88,21 @@ router.post(
 // GET /api/auth/me (protected)
 router.get("/me", auth, async (req, res) => {
   res.json({
-    user: { id: req.user._id, name: req.user.name, email: req.user.email },
+    user: { id: req.user._id, name: req.user.name, email: req.user.email, role: req.user.role },
   });
+});
+
+// GET /api/auth/users (admin only)
+router.get("/users", auth, async (req, res) => {
+  try {
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ message: "Admin access required" });
+    }
+    const users = await User.find().select("name email role createdAt").sort({ createdAt: -1 });
+    res.json(users);
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 module.exports = router;
