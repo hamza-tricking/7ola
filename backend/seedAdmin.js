@@ -1,6 +1,6 @@
 require("dotenv").config({ path: require("path").join(__dirname, "..", ".env") });
 const mongoose = require("mongoose");
-const User = require("../models/User");
+const User = require("./models/User");
 
 const ADMIN_EMAIL = "admin@hollah.com";
 const ADMIN_PASSWORD = "admin123";
