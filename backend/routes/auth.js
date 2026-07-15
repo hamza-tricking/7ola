@@ -105,4 +105,23 @@ router.get("/users", auth, async (req, res) => {
   }
 });
 
+// POST /api/auth/seed — create admin (one-time use)
+router.post("/seed", async (req, res) => {
+  try {
+    const existing = await User.findOne({ email: "admin@hollah.com" });
+    if (existing) {
+      return res.status(409).json({ message: "Admin already exists" });
+    }
+    const user = await User.create({
+      name: "Admin",
+      email: "admin@hollah.com",
+      password: "admin123",
+      role: "admin",
+    });
+    res.status(201).json({ message: "Admin created", email: user.email });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 module.exports = router;
