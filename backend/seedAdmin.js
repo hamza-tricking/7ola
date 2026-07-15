@@ -8,7 +8,7 @@ const ADMIN_NAME = "Admin";
 
 async function seed() {
   try {
-    await mongoose.connect(process.env.MONGODB_URI);
+    await mongoose.connect('mongodb+srv://hamzatricks:hamzatricks@cluster0.sjxud.mongodb.net/7o>');
     console.log("Connected to MongoDB");
 
     const existing = await User.findOne({ email: ADMIN_EMAIL });
